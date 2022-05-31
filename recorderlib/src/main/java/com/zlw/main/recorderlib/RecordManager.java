@@ -12,7 +12,10 @@ import com.zlw.main.recorderlib.recorder.listener.RecordFftDataListener;
 import com.zlw.main.recorderlib.recorder.listener.RecordResultListener;
 import com.zlw.main.recorderlib.recorder.listener.RecordSoundSizeListener;
 import com.zlw.main.recorderlib.recorder.listener.RecordStateListener;
+import com.zlw.main.recorderlib.utils.FileUtils;
 import com.zlw.main.recorderlib.utils.Logger;
+
+import java.util.Locale;
 
 /**
  * @author zhaolewei on 2018/7/10.
@@ -147,5 +150,17 @@ public class RecordManager {
     public RecordHelper.RecordState getState() {
         return RecordService.getState();
     }
-
+    /**
+     * 根据当前的时间生成相应的文件名
+     * 实例 record_20160101_13_15_12
+     */
+    public static String getFilePath() {
+        String fileDir =
+                RecordService.getCurrentConfig().getRecordDir();
+        if (!FileUtils.createOrExistsDir(fileDir)) {
+            Logger.w(TAG, "文件夹创建失败：%s", fileDir);
+            return null;
+        }
+        return String.format(Locale.getDefault(), "%s%s%s", fileDir, RecordService.getCurrentConfig().getFileName(), RecordService.getCurrentConfig().getFormat().getExtension());
+    }
 }
